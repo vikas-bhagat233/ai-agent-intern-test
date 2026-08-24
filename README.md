@@ -37,7 +37,7 @@ cp .env.example .env
 Edit `.env`:
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4-turbo-preview
+OPENAI_MODEL=gpt-4o-mini
 EMBEDDING_MODEL=text-embedding-3-small
 CHROMA_PERSIST_DIR=./chroma_db
 LOG_LEVEL=INFO
