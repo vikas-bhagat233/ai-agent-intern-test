@@ -97,36 +97,30 @@ pytest tests/test_evaluation.py::TestEvaluation::test_visible_cases -vv
 - **Tooling**: Isolated function lookup for order management (`src/order_tool.py`) with automatic field redaction.
 
 ### High-Level Architecture Diagram
-```
-                    +--------------------+
-                    |  User Query / CLI  |
-                    +---------+----------+
-                              |
-                              v
-                  +-----------------------+
-                  |    RAGAgent Core      |
-                  +-----------+-----------+
-                              |
-       +----------------------+----------------------+
-       |                      |                      |
-       v                      v                      v
-+--------------+      +----------------+     +---------------+
-| VectorStore  |      |   OrderTool    |     | Conversation  |
-|  (ChromaDB)  |      |  (orders.json) |     | (Session Sync)|
-+--------------+      +----------------+     +---------------+
-       |                      |                      |
-       +----------------------+----------------------+
-                              |
-                              v
-                   +---------------------+
-                   | System Prompt & LLM |
-                   +----------+----------+
-                              |
-                              v
-                   +---------------------+
-                   | Answer + Citations  |
-                   | + Handoff Decision  |
-                   +---------------------+
+```mermaid
+flowchart TD
+       User[User] --> CLI[CLI]
+       CLI --> Agent[RAGAgent]
+
+       Agent --> Memory[ConversationMemory]
+       Agent --> Order{Order ID present?}
+       Order -->|Yes| Tool[OrderTool]
+       Order -->|No| Retrieve[Retrieve relevant documents]
+       Tool --> Orders[(data/orders.json)]
+       Tool --> Retrieve
+
+       subgraph Knowledge[Knowledge Base Indexing and Retrieval]
+              Files[(knowledge-base/*.md)] --> Processor[DocumentProcessor]
+              Processor --> Store[(VectorStore / ChromaDB)]
+              Store --> Retrieve
+       end
+
+       Retrieve --> Prompt[System prompt + context + retrieved data]
+       Memory --> Prompt
+       Prompt --> LLM[OpenAI gpt-4o-mini]
+       LLM --> Response[Answer with citations]
+       Response --> Handoff[Handoff decision]
+       Handoff --> CLI
 ```
 
 ---
