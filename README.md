@@ -90,7 +90,7 @@ pytest tests/test_evaluation.py::TestEvaluation::test_visible_cases -vv
 ## Architecture & Technology Stack
 
 - **Model Framework**: Python, LangChain (`langchain-community`, `langchain-openai`)
-- **LLM**: OpenAI `gpt-4-turbo-preview` (with fallback support)
+- **LLM**: OpenAI `gpt-4o-mini` (with fallback support)
 - **Embeddings**: `text-embedding-3-small`
 - **Vector Database**: ChromaDB (`chromadb==0.4.24`)
 - **Document Processing**: Custom frontmatter parser and semantic chunking engine (`src/document_processor.py`)
